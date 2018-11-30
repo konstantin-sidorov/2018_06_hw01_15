@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:annotation-config/>
+    <context:spring-configured/>
+    <bean id="templateProcessor" class="ru.otus.servlet.TemplateProcessor"/>
+    <bean id="adressDB" class="ru.otus.messageSystem.Address">
+        <constructor-arg name="id" value="DB" />
+    </bean>
+    <bean id="messSys" class="ru.otus.messageSystem.MessageSystem"/>
+    <bean id="context" class="ru.otus.messageSystem.app.MessageSystemContext">
+        <constructor-arg name="messageSystem" ref="messSys" />
+    </bean>
+    <bean id="cache" class="ru.otus.cache.CacheEngineImpl">
+        <constructor-arg name="maxElements" value="3" />
+        <constructor-arg name="lifeTimeMs" value="0" />
+        <constructor-arg name="idleTimeMs" value="900" />
+        <constructor-arg name="isEternal" value="false" />
+    </bean>
+    <bean id="dataBase" class="ru.otus.dbService.DBServiceImpl">
+        <constructor-arg name="cache" ref="cache" />
+        <constructor-arg name="address" ref="adressDB" />
+        <constructor-arg name="context" ref="context" />
+    </bean>
+</beans>
